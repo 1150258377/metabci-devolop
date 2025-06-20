@@ -1,0 +1,4 @@
+Traceback (most recent call last):
+  File "C:\Users\jing pengqiang\Desktop\MetaBCI-master\readbrainwave\dreamer_metabci_integration.py", line 18, in <module>
+    from metabci.brainda.algorithms.decomposition.csp import CSP, FBCSP
+ModuleNotFoundError: No module named 'metabci'

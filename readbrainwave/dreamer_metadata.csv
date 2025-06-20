@@ -1,0 +1,2 @@
+eeg_sampling_rate,ecg_sampling_rate,no_of_subjects,no_of_video_sequences,eeg_electrodes
+128,256,23,18,['AF3']
