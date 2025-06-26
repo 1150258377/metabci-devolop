@@ -1,0 +1,3 @@
+-r MetaBCI-master/requirements.txt
+streamlit
+matplotlib

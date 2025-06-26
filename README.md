@@ -38,9 +38,43 @@
 
 4.  **运行平台**
     ```bash
-    streamlit run eeg_platform_streamlit.py
+    streamlit run MetaBCI-master/demos/eeg_platform_streamlit.py
     ```
-    运行后，程序会自动在浏览器中打开一个Web页面，您可以在此页面上进行交互式分析。
+    运行后，程序会自动在浏览器中打开一个 Web 页面，您可以在此页面上进行交互式分析。
+
+5.  **使用更复杂的模型**
+    ```bash
+    python MetaBCI-master/demos/dreamer_big_model.py --subject 1
+    ```
+    该脚本示范如何替换默认的 SVM，使用 PyTorch 神经网络或自定义模型。若要加载自己
+    的微调模型，可通过 `--model path/to/model.pt` 指定模型文件。
+
+6.  **微调并接入大型模型**
+    1. 执行 `dreamer_big_model.py` 生成训练特征或直接在脚本中加载 `DREAMER.mat`。
+    2. 根据您选择的框架（如 PyTorch、TensorFlow 以及更高级的 **O3** 或 **QWQ** 模型接口）编写训练代码，对特征进行微调。
+    3. 微调完成后将模型保存为 `.pt`/`.ckpt` 等文件，并在运行脚本时通过 `--model` 指定路径进行评估。
+    4. 若模型部署在远程服务器，可通过 `--remote-url` 和 `--api-key` 发送特征到 HTTP 接口获取预测结果。
+
+    示例：
+    ```bash
+    # 训练并保存模型权重
+    python MetaBCI-master/demos/dreamer_big_model.py --subject 1 --epochs 50 \
+        --save-path my_model.pt
+    # 加载已有的大模型进行预测
+    python MetaBCI-master/demos/dreamer_big_model.py --subject 1 \
+        --model my_model.pt
+    # 调用远程模型接口进行预测
+    python MetaBCI-master/demos/dreamer_big_model.py --subject 1 \
+        --remote-url https://api.example.com/predict --api-key YOUR_TOKEN
+    ```
+
+### Web 页面功能简介
+运行 Streamlit 页面后，你可以在浏览器中完成以下操作：
+* **数据源选择**：使用示例信号或加载 DREAMER 数据集；
+* **预处理与特征提取**：在侧边栏配置滤波、窗口长度及功率特征；
+* **神经网络结构**：动态调整隐藏层数量、Dropout 等超参数；
+* **结果可视化与仿真**：查看训练曲线、特征权重，并通过电路仿真输入特征电压获得预测
+  结果。
 
 ## 项目目标
 
