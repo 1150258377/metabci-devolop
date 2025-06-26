@@ -56,13 +56,37 @@ python MetaBCI-master/demos/dreamer_analysis.py
   该脚本会自动完成数据读取、预处理、特征提取与情绪分类。
 
 ### 修改/替换分类算法
-- 打开 `MetaBCI-master/demos/dreamer_analysis.py`，定位到 **第 67 行左右**：
+ - 打开 `MetaBCI-master/demos/dreamer_analysis.py`，定位到 **第 67 行左右**：
   ```python
   clf = SVC(kernel='rbf', random_state=42)
   clf.fit(X_train, y_train)
   ```
   - 将 `SVC(...)` 替换为任意 `sklearn` 分类器，或是你自定义的模型。
-  - 如果需要深度学习模型，可在此处写入 PyTorch / TensorFlow 代码，只要输入特征 `X_train`、`y_train`，即可与当前流程无缝衔接。
+ - 如果需要深度学习模型，可在此处写入 PyTorch / TensorFlow 代码，只要输入特征 `X_train`、`y_train`，即可与当前流程无缝衔接。
+
+### 微调并接入大型模型
+1. 运行 `MetaBCI-master/demos/dreamer_big_model.py` 提取特征并训练基础网络，可通过
+   `--save-path` 保存权重。
+2. 使用您选择的框架（如 PyTorch、TensorFlow 或更高级的 **O3**/**QWQ** 模型）在上述特征
+   基础上进行微调。
+3. 将微调后的模型保存为 `.pt` 或 `.ckpt`，并在脚本中使用 `--model` 加载即可验证效果。
+4. 如果将模型部署在服务器端，可在脚本中使用 `--remote-url` 和 `--api-key` 将特征发送到
+   HTTP 接口获得预测结果。
+
+示例：
+```bash
+python MetaBCI-master/demos/dreamer_big_model.py --subject 1 --epochs 50 \
+    --save-path my_model.pt
+python MetaBCI-master/demos/dreamer_big_model.py --subject 1 --model my_model.pt
+python MetaBCI-master/demos/dreamer_big_model.py --subject 1 \
+    --remote-url https://api.example.com/predict --api-key YOUR_TOKEN
+```
+
+### Web 界面功能
+运行 `streamlit run MetaBCI-master/demos/eeg_platform_streamlit.py` 后，可在浏览器：
+- 选择数据源及预处理参数；
+- 配置多种功率特征并调整 MLP 结构；
+- 观察实时训练曲线、特征贡献度及简易电路仿真结果。
 
 ### 标签的来源与处理逻辑
 - DREAMER.mat 中包含每个视频的 **情绪自评分** (Valence / Arousal / Dominance)，范围 1~5。
